@@ -1,7 +1,23 @@
 # angularjs-flux-example
 Example of an AngularJS application using Flux Pattern
 
-## Build and Run
+## Build, Run and Test
+
+### Build Dev
+
+`webpack -d`
+
+### Build Prod
+
+`webpack -p`
+
+### Run
+
+`node server.js`
+
+### Test
+
+`npm test`
 
 
 ## JSON REST API
