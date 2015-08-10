@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title>AngularJS Flux Example</title>
+	<script deferred type="text/javascript" src="/app.js"></script>
+</head>
+<body>
+	<div ng-controller="AppCtrl">
+		
+		<div
+		class="cart-products-list"
+		ng-controller="ProductsListCtrl">
+
+			<div ng-if="!isLoading">
+				<div
+				class="cart-products-list-product {{ ( selectedProduct && selectedProduct._id == product._id ) ? 'cart-products-list-product--selected' : '' }}"
+				style="background-image: url( {{ product.picture }} );"
+				ng-repeat="product in products"
+				ng-click="selectProduct( product )">
+					<div class="cart-products-list-product__name">{{ product.name }}</div>
+					<div class="cart-products-list-product__details">{{ product.details }}</div>
+					<div class="cart-products-list-product__price">$ {{ product.price }}</div>
+				</div>
+			</div>
+
+			<div ng-if="isLoading">Loading...</div>
+
+		</div>
+
+		<!--div
+		class="cart-deliveries"
+		ng-controller="CartDeliveriesCtrl">
+			<input class="cart-deliveries__range" type="range" min="1" max="100" ng-model="deliveries" />
+			<span class="cart-deliveries__label">You select {{ deliveries }} deliveries.</span>
+		</div>
+
+		<div
+		class="cart-total"
+		ng-controller="CartTotalCtrl">
+			$ {{ total }}
+		</div-->
+
+	</div>
+</body>
+</html>
