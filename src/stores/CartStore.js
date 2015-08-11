@@ -30,15 +30,17 @@ export default class CartStore extends EventEmitter {
 				this.selectedProduct = Immutable.fromJS( action.data );
 				this.deliveries = 1;
 				this.calcTotal( );
+
+				this.emitChange( );
 			break;
 
 			case CartConstants.UPDATE_DELIVERIES:
 				this.deliveries = parseInt( action.data );
 				this.calcTotal( );
+
+				this.emitChange( );
 			break;
 		}
-
-		this.emitChange( );
 	}
 
 	emitChange( ) {

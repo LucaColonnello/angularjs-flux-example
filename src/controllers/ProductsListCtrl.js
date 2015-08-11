@@ -5,11 +5,13 @@ export default class ProductsListCtrl {
 ,		CartStore
 ,		ProductsActionCreators
 ,		CartActionCreators
+,		$rootScope
 ,		$scope
 ,		Dispatcher
 	) {
 		// set vars
 		this.Dispatcher = Dispatcher;
+		this.$root = $rootScope;
 		this.$scope = $scope;
 		this.ProductsStore = ProductsStore;
 		this.CartStore = CartStore;
@@ -48,8 +50,15 @@ export default class ProductsListCtrl {
 		} else {
 			this.$scope.selectedProduct = false;
 		}
-
-		this.$scope.$apply( );
+		
+		// use safe apply here
+		// this code gives an '$apply is already in progress' error
+		// we have to call apply because changes could not be triggered only by an angular call such as UI event,
+		// they could be triggered by an action
+		// https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+		var phase = this.$root.$$phase;
+		if( phase != '$apply' && phase != '$digest' )
+			this.$scope.$apply( );
 	}
 
 	productsChangeListener ( ) {
@@ -59,15 +68,20 @@ export default class ProductsListCtrl {
 			this.$scope.isLoading = false;
 			this.$scope.products = this.ProductsStore.collection.toJS( );
 		}
-
-		this.$scope.$apply( );
+		
+		// use safe apply here
+		// this code gives an '$apply is already in progress' error
+		// we have to call apply because changes could not be triggered only by an angular call such as UI event,
+		// they could be triggered by an action
+		// https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+		var phase = this.$root.$$phase;
+		if( phase != '$apply' && phase != '$digest' )
+			this.$scope.$apply( );
 	}
 
 	selectProduct ( product ) {
-		console.log( "selected", product );
-
-		// mock
-		this.$scope.selectedProduct = product;
+		// call action
+		this.CartActionCreators.SelectProduct( product );
 	}
 
 }

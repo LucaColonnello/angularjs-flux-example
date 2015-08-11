@@ -27,6 +27,8 @@ export default class ProductsStore extends EventEmitter {
 				this.isLoading = true;
 				this.downloadError = false;
 				this.dataParsingError = false;
+
+				this.emitChange( );
 			break;
 
 			case ProductsConstants.SET_DATA:
@@ -34,6 +36,8 @@ export default class ProductsStore extends EventEmitter {
 				this.downloadError = false;
 				this.dataParsingError = false;
 				this.collection = Immutable.fromJS( action.data );
+
+				this.emitChange( );
 			break;
 
 			case ProductsConstants.DOWNLOAD_ERR:
@@ -41,6 +45,8 @@ export default class ProductsStore extends EventEmitter {
 				this.collection = null;
 				this.downloadError = true;
 				this.dataParsingError = false;
+
+				this.emitChange( );
 			break;
 
 			case ProductsConstants.DATA_PARSING_ERR:
@@ -48,10 +54,10 @@ export default class ProductsStore extends EventEmitter {
 				this.collection = null;
 				this.dataParsingError = true;
 				this.downloadError = false;
+
+				this.emitChange( );
 			break;
     	}
-
-    	this.emitChange( );
 	}
 
 	emitChange( ) {

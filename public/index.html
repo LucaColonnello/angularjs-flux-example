@@ -2,9 +2,57 @@
 <html ng-app="app">
 <head>
 	<title>AngularJS Flux Example</title>
+	<link rel="stylesheet" type="text/css" href="/style.css">
 	<script deferred type="text/javascript" src="/app.js"></script>
 </head>
 <body>
+	<div style="margin: 10px;">
+		<span style="position: relative; display: block; float: left; height: 24px; line-height: 24px; margin-right: 10px;">Luca Colonnello</span>
+		<a style="position: relative; display: inline-block; width: 24px; height: 24px; margin-right: 10px;" href="https://github.com/LucaColonnello" title="Luca Colonnello on GitHub" class="github">
+		      <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+		        <path d="M512 0C229.252 0 0 229.25199999999995 0 512c0 226.251 146.688 418.126 350.155 485.813 25.593 4.686 34.937-11.125 34.937-24.626 0-12.188-0.469-52.562-0.718-95.314-128.708 23.46-161.707-31.541-172.469-60.373-5.525-14.809-30.407-60.249-52.398-72.263-17.988-9.828-43.26-33.237-0.917-33.735 40.434-0.476 69.348 37.308 78.471 52.75 45.938 77.749 119.876 55.627 148.999 42.5 4.654-32.999 17.902-55.627 32.501-68.373-113.657-12.939-233.22-56.875-233.22-253.063 0-55.94 19.968-101.561 52.658-137.404-5.22-12.999-22.844-65.095 5.063-135.563 0 0 42.937-13.749 140.811 52.501 40.811-11.406 84.594-17.031 128.124-17.22 43.499 0.188 87.314 5.874 128.188 17.28 97.689-66.311 140.686-52.501 140.686-52.501 28 70.532 10.375 122.564 5.124 135.499 32.811 35.844 52.626 81.468 52.626 137.404 0 196.686-119.751 240-233.813 252.686 18.439 15.876 34.748 47.001 34.748 94.748 0 68.437-0.686 123.627-0.686 140.501 0 13.625 9.312 29.561 35.25 24.562C877.436 929.998 1024 738.126 1024 512 1024 229.25199999999995 794.748 0 512 0z"></path>
+		      </svg>
+		</a>
+		<a style="position: relative; display: inline-block; width: 24px; height: 24px;" href="https://it.linkedin.com/pub/luca-colonnello/26/545/774" title="Luca Colonnello on LinkedIn" class="linkedin">
+			<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewbox="0 0 512 512" fill="#000000">
+				<g id="svgGrid" class="svgGrid">
+		          <line stroke-width="1" stroke="#B35047" x1="32" x2="32" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="64" x2="64" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="96" x2="96" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="128" x2="128" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="160" x2="160" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="192" x2="192" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="224" x2="224" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="256" x2="256" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="288" x2="288" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="320" x2="320" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="352" x2="352" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="384" x2="384" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="416" x2="416" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="448" x2="448" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="480" x2="480" y1="0" y2="512"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="32" y2="32"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="64" y2="64"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="96" y2="96"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="128" y2="128"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="160" y2="160"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="192" y2="192"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="224" y2="224"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="256" y2="256"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="288" y2="288"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="320" y2="320"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="352" y2="352"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="384" y2="384"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="416" y2="416"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="448" y2="448"></line>
+		          <line stroke-width="1" stroke="#B35047" x1="0" x2="512" y1="480" y2="480"></line>
+		          <rect x="0" y="0" width="512" height="512" fill="none" stroke-width="1" stroke="#B35047"></rect>
+		        </g>
+		        <path d="M 426.00,0.00L 86.00,0.00 C 38.70,0.00,0.00,38.70,0.00,86.00l0.00,340.00 c0.00,47.30, 38.70,86.00, 86.00,86.00l 340.00,0.00 c 47.30,0.00, 86.00-38.70, 86.00-86.00L 512.00,86.00 C 512.00,38.70, 473.30,0.00, 426.00,0.00z M 192.00,416.00l-64.00,0.00 L 128.00,192.00 l 64.00,0.00 L 192.00,416.00 z M 160.00,160.00c-17.673,0.00-32.00-14.327-32.00-32.00s 14.327-32.00, 32.00-32.00s 32.00,14.327, 32.00,32.00S 177.673,160.00, 160.00,160.00z M 416.00,416.00l-64.00,0.00 L 352.00,288.00 c0.00-17.673-14.327-32.00-32.00-32.00s-32.00,14.327-32.00,32.00l0.00,128.00 l-64.00,0.00 L 224.00,192.00 l 64.00,0.00 l0.00,39.736 C 301.199,213.604, 321.376,192.00, 344.00,192.00c 39.765,0.00, 72.00,35.817, 72.00,80.00 L 416.00,416.00 z" fill="#000000"></path>
+			</svg>
+		</a>
+	</div>
+
 	<div ng-controller="AppCtrl">
 		
 		<div
@@ -13,13 +61,16 @@
 
 			<div ng-if="!isLoading">
 				<div
-				class="cart-products-list-product {{ ( selectedProduct && selectedProduct._id == product._id ) ? 'cart-products-list-product--selected' : '' }}"
-				style="background-image: url( {{ product.picture }} );"
-				ng-repeat="product in products"
-				ng-click="selectProduct( product )">
-					<div class="cart-products-list-product__name">{{ product.name }}</div>
-					<div class="cart-products-list-product__details">{{ product.details }}</div>
-					<div class="cart-products-list-product__price">$ {{ product.price }}</div>
+				class="cart-products-list-product-container"
+				ng-repeat="product in products">
+					<div
+					class="cart-products-list-product {{ ( selectedProduct && selectedProduct._id == product._id ) ? 'cart-products-list-product--selected' : '' }}"
+					style="background-image: url( {{ product.picture }} );"
+					ng-click="selectProduct( product )">
+						<div class="cart-products-list-product__name"><strong>{{ product.name }}</strong></div>
+						<div class="cart-products-list-product__details"><em>{{ product.details }}</em></div>
+						<div class="cart-products-list-product__price"><strong>$ {{ product.price }}</strong></div>
+					</div>
 				</div>
 			</div>
 
@@ -27,18 +78,21 @@
 
 		</div>
 
-		<!--div
+		<div
 		class="cart-deliveries"
 		ng-controller="CartDeliveriesCtrl">
-			<input class="cart-deliveries__range" type="range" min="1" max="100" ng-model="deliveries" />
-			<span class="cart-deliveries__label">You select {{ deliveries }} deliveries.</span>
+			<div style="display: {{ deliveries ? 'block' : 'none' }};">
+				<span class="cart-deliveries__label">You select <strong>{{ deliveries }}</strong> deliveries.</span>
+				<input class="cart-deliveries__range" type="range" min="1" max="100" ng-model="deliveries" ng-change="changeDeliveries( )" />
+			</div>
+			<div class="cart-deliveries__info" style="display: {{ !deliveries ? 'block' : 'none' }};">Select one product.</div>
 		</div>
 
 		<div
 		class="cart-total"
 		ng-controller="CartTotalCtrl">
 			$ {{ total }}
-		</div-->
+		</div>
 
 	</div>
 </body>

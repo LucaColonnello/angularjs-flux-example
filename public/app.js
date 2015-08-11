@@ -67,13 +67,15 @@
 	
 	var Controllers = _interopRequireWildcard(_controllers);
 	
-	var _actions = __webpack_require__(/*! ./actions */ 10);
+	var _actions = __webpack_require__(/*! ./actions */ 12);
 	
 	var ActionCreators = _interopRequireWildcard(_actions);
 	
-	var _stores = __webpack_require__(/*! ./stores */ 19);
+	var _stores = __webpack_require__(/*! ./stores */ 21);
 	
 	var Stores = _interopRequireWildcard(_stores);
+	
+	__webpack_require__(/*! ./styles/app.less */ 26);
 	
 	var app = _vendorAngular2['default'].module('app', []).service('Dispatcher', _flux.Dispatcher);
 	
@@ -28877,9 +28879,19 @@
 	
 	var _ProductsListCtrl2 = _interopRequireDefault(_ProductsListCtrl);
 	
+	var _CartDeliveriesCtrl = __webpack_require__(/*! ./CartDeliveriesCtrl */ 10);
+	
+	var _CartDeliveriesCtrl2 = _interopRequireDefault(_CartDeliveriesCtrl);
+	
+	var _CartTotalCtrl = __webpack_require__(/*! ./CartTotalCtrl */ 11);
+	
+	var _CartTotalCtrl2 = _interopRequireDefault(_CartTotalCtrl);
+	
 	exports['default'] = {
 		AppCtrl: _AppCtrl2['default'],
-		ProductsListCtrl: _ProductsListCtrl2['default']
+		ProductsListCtrl: _ProductsListCtrl2['default'],
+		CartDeliveriesCtrl: _CartDeliveriesCtrl2['default'],
+		CartTotalCtrl: _CartTotalCtrl2['default']
 	};
 	module.exports = exports['default'];
 
@@ -28921,22 +28933,23 @@
   \*********************************************/
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
 	var ProductsListCtrl = (function () {
-		function ProductsListCtrl(ProductsStore, CartStore, ProductsActionCreators, CartActionCreators, $scope, Dispatcher) {
+		function ProductsListCtrl(ProductsStore, CartStore, ProductsActionCreators, CartActionCreators, $rootScope, $scope, Dispatcher) {
 			_classCallCheck(this, ProductsListCtrl);
 	
 			// set vars
 			this.Dispatcher = Dispatcher;
+			this.$root = $rootScope;
 			this.$scope = $scope;
 			this.ProductsStore = ProductsStore;
 			this.CartStore = CartStore;
@@ -28962,14 +28975,14 @@
 			CartStore.addChangeListener(this.cartChangeListener);
 	
 			// listen destroy and remove listerner to stores
-			$scope.$on("$destroy", function () {
+			$scope.$on('$destroy', function () {
 				ProductsStore.removeChangeListener(this.productsChangeListener);
 				CartStore.removeChangeListener(this.cartChangeListener);
 			});
 		}
 	
 		_createClass(ProductsListCtrl, [{
-			key: "cartChangeListener",
+			key: 'cartChangeListener',
 			value: function cartChangeListener() {
 				if (this.CartStore.selectedProduct) {
 					this.$scope.selectedProduct = this.CartStore.selectedProduct.toJS();
@@ -28977,10 +28990,16 @@
 					this.$scope.selectedProduct = false;
 				}
 	
-				this.$scope.$apply();
+				// use safe apply here
+				// this code gives an '$apply is already in progress' error
+				// we have to call apply because changes could not be triggered only by an angular call such as UI event,
+				// they could be triggered by an action
+				// https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+				var phase = this.$root.$$phase;
+				if (phase != '$apply' && phase != '$digest') this.$scope.$apply();
 			}
 		}, {
-			key: "productsChangeListener",
+			key: 'productsChangeListener',
 			value: function productsChangeListener() {
 				if (this.ProductsStore.isLoading) {
 					this.$scope.isLoading = true;
@@ -28989,26 +29008,170 @@
 					this.$scope.products = this.ProductsStore.collection.toJS();
 				}
 	
-				this.$scope.$apply();
+				// use safe apply here
+				// this code gives an '$apply is already in progress' error
+				// we have to call apply because changes could not be triggered only by an angular call such as UI event,
+				// they could be triggered by an action
+				// https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+				var phase = this.$root.$$phase;
+				if (phase != '$apply' && phase != '$digest') this.$scope.$apply();
 			}
 		}, {
-			key: "selectProduct",
+			key: 'selectProduct',
 			value: function selectProduct(product) {
-				console.log("selected", product);
-	
-				// mock
-				this.$scope.selectedProduct = product;
+				// call action
+				this.CartActionCreators.SelectProduct(product);
 			}
 		}]);
 	
 		return ProductsListCtrl;
 	})();
 	
-	exports["default"] = ProductsListCtrl;
-	module.exports = exports["default"];
+	exports['default'] = ProductsListCtrl;
+	module.exports = exports['default'];
 
 /***/ },
 /* 10 */
+/*!***********************************************!*\
+  !*** ./src/controllers/CartDeliveriesCtrl.js ***!
+  \***********************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var CartDeliveriesCtrl = (function () {
+		function CartDeliveriesCtrl(CartStore, CartActionCreators, $rootScope, $scope, Dispatcher) {
+			_classCallCheck(this, CartDeliveriesCtrl);
+	
+			// set vars
+			this.Dispatcher = Dispatcher;
+			this.$root = $rootScope;
+			this.$scope = $scope;
+			this.CartStore = CartStore;
+			this.CartActionCreators = CartActionCreators;
+	
+			// set scope data
+			this.$scope.deliveries = CartStore.selectedProduct ? CartStore.deliveries : 0;
+	
+			// set handlers
+			this.$scope.changeDeliveries = this.changeDeliveries.bind(this);
+	
+			// overwrite to apply binding
+			// if we call twice bind in add and remove
+			// we can't be able to remove the listener, because it's a new one
+			this.cartChangeListener = this.cartChangeListener.bind(this);
+	
+			// add listeners to stores
+			CartStore.addChangeListener(this.cartChangeListener);
+	
+			// listen destroy and remove listerner to stores
+			$scope.$on('$destroy', function () {
+				CartStore.removeChangeListener(this.cartChangeListener);
+			});
+		}
+	
+		_createClass(CartDeliveriesCtrl, [{
+			key: 'cartChangeListener',
+			value: function cartChangeListener() {
+				this.$scope.deliveries = this.CartStore.deliveries;
+	
+				// use safe apply here
+				// this code gives an '$apply is already in progress' error
+				// we have to call apply because changes could not be triggered only by an angular call such as UI event,
+				// they could be triggered by an action
+				// https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+				var phase = this.$root.$$phase;
+				if (phase != '$apply' && phase != '$digest') this.$scope.$apply();
+			}
+		}, {
+			key: 'changeDeliveries',
+			value: function changeDeliveries() {
+				this.CartActionCreators.UpdateDeliveries(this.$scope.deliveries);
+			}
+		}]);
+	
+		return CartDeliveriesCtrl;
+	})();
+	
+	exports['default'] = CartDeliveriesCtrl;
+	module.exports = exports['default'];
+
+/***/ },
+/* 11 */
+/*!******************************************!*\
+  !*** ./src/controllers/CartTotalCtrl.js ***!
+  \******************************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var CartTotalCtrl = (function () {
+		function CartTotalCtrl(CartStore, CartActionCreators, $rootScope, $scope, Dispatcher) {
+			_classCallCheck(this, CartTotalCtrl);
+	
+			// set vars
+			this.Dispatcher = Dispatcher;
+			this.$root = $rootScope;
+			this.$scope = $scope;
+			this.CartStore = CartStore;
+			this.CartActionCreators = CartActionCreators;
+	
+			// set scope data
+			this.$scope.total = CartStore.total;
+	
+			// overwrite to apply binding
+			// if we call twice bind in add and remove
+			// we can't be able to remove the listener, because it's a new one
+			this.cartChangeListener = this.cartChangeListener.bind(this);
+	
+			// add listeners to stores
+			CartStore.addChangeListener(this.cartChangeListener);
+	
+			// listen destroy and remove listerner to stores
+			$scope.$on('$destroy', function () {
+				CartStore.removeChangeListener(this.cartChangeListener);
+			});
+		}
+	
+		_createClass(CartTotalCtrl, [{
+			key: 'cartChangeListener',
+			value: function cartChangeListener() {
+				this.$scope.total = Math.round(this.CartStore.total * 100) / 100;
+	
+				// use safe apply here
+				// this code gives an '$apply is already in progress' error
+				// we have to call apply because changes could not be triggered only by an angular call such as UI event,
+				// they could be triggered by an action
+				// https://coderwall.com/p/ngisma/safe-apply-in-angular-js
+				var phase = this.$root.$$phase;
+				if (phase != '$apply' && phase != '$digest') this.$scope.$apply();
+			}
+		}]);
+	
+		return CartTotalCtrl;
+	})();
+	
+	exports['default'] = CartTotalCtrl;
+	module.exports = exports['default'];
+
+/***/ },
+/* 12 */
 /*!******************************!*\
   !*** ./src/actions/index.js ***!
   \******************************/
@@ -29022,11 +29185,11 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 	
-	var _ProductsActionCreators = __webpack_require__(/*! ./ProductsActionCreators */ 11);
+	var _ProductsActionCreators = __webpack_require__(/*! ./ProductsActionCreators */ 13);
 	
 	var ProductsActionCreators = _interopRequireWildcard(_ProductsActionCreators);
 	
-	var _CartActionCreators = __webpack_require__(/*! ./CartActionCreators */ 17);
+	var _CartActionCreators = __webpack_require__(/*! ./CartActionCreators */ 19);
 	
 	var CartActionCreators = _interopRequireWildcard(_CartActionCreators);
 	
@@ -29034,7 +29197,7 @@
 	exports.CartActionCreators = CartActionCreators;
 
 /***/ },
-/* 11 */
+/* 13 */
 /*!***********************************************!*\
   !*** ./src/actions/ProductsActionCreators.js ***!
   \***********************************************/
@@ -29049,20 +29212,21 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _constantsProductsConstants = __webpack_require__(/*! ../constants/ProductsConstants */ 12);
+	var _constantsProductsConstants = __webpack_require__(/*! ../constants/ProductsConstants */ 14);
 	
 	var _constantsProductsConstants2 = _interopRequireDefault(_constantsProductsConstants);
 	
-	var _superagent = __webpack_require__(/*! superagent */ 13);
+	var _superagent = __webpack_require__(/*! superagent */ 15);
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
-	var _superagentJsonp = __webpack_require__(/*! superagent-jsonp */ 16);
+	var jsonp;
 	
-	var _superagentJsonp2 = _interopRequireDefault(_superagentJsonp);
-	
-	// apply jsonp to request
-	(0, _superagentJsonp2['default'])(_superagent2['default']);
+	// apply jsonp to request if we are in browser
+	if (typeof window !== 'undefined') {
+		jsonp = __webpack_require__(/*! superagent-jsonp */ 18);
+		jsonp(_superagent2['default']);
+	}
 	
 	// BEST PRACTICE: Download code must be placed into an API like Object
 	// It's here only for sample purpose
@@ -29072,7 +29236,14 @@
 			type: _constantsProductsConstants2['default'].LOADING
 		});
 	
-		_superagent2['default'].get('http://www.mocky.io/v2/55c8c2ae66d16f900ef63bca').jsonp().end(function downloadProductsCallback(err, res) {
+		// create request
+		var r = _superagent2['default'].get('http://www.mocky.io/v2/55c8c2ae66d16f900ef63bca');
+	
+		// check we have to apply jsonp
+		if (typeof window !== 'undefined') r.jsonp();
+	
+		// make the request
+		r.end(function downloadProductsCallback(err, res) {
 			// check err
 			if (err) {
 				console.log('Service Download Error', err);
@@ -29103,7 +29274,7 @@
 	;
 
 /***/ },
-/* 12 */
+/* 14 */
 /*!********************************************!*\
   !*** ./src/constants/ProductsConstants.js ***!
   \********************************************/
@@ -29125,7 +29296,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 13 */
+/* 15 */
 /*!************************************!*\
   !*** ./~/superagent/lib/client.js ***!
   \************************************/
@@ -29135,8 +29306,8 @@
 	 * Module dependencies.
 	 */
 	
-	var Emitter = __webpack_require__(/*! emitter */ 14);
-	var reduce = __webpack_require__(/*! reduce */ 15);
+	var Emitter = __webpack_require__(/*! emitter */ 16);
+	var reduce = __webpack_require__(/*! reduce */ 17);
 	
 	/**
 	 * Root reference for iframes.
@@ -30272,7 +30443,7 @@
 
 
 /***/ },
-/* 14 */
+/* 16 */
 /*!***************************************************!*\
   !*** ./~/superagent/~/component-emitter/index.js ***!
   \***************************************************/
@@ -30445,7 +30616,7 @@
 
 
 /***/ },
-/* 15 */
+/* 17 */
 /*!**************************************************!*\
   !*** ./~/superagent/~/reduce-component/index.js ***!
   \**************************************************/
@@ -30477,7 +30648,7 @@
 	};
 
 /***/ },
-/* 16 */
+/* 18 */
 /*!*************************************!*\
   !*** ./~/superagent-jsonp/index.js ***!
   \*************************************/
@@ -30542,7 +30713,7 @@
 
 
 /***/ },
-/* 17 */
+/* 19 */
 /*!*******************************************!*\
   !*** ./src/actions/CartActionCreators.js ***!
   \*******************************************/
@@ -30558,7 +30729,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _constantsCartConstants = __webpack_require__(/*! ../constants/CartConstants */ 18);
+	var _constantsCartConstants = __webpack_require__(/*! ../constants/CartConstants */ 20);
 	
 	var _constantsCartConstants2 = _interopRequireDefault(_constantsCartConstants);
 	
@@ -30581,7 +30752,7 @@
 	;
 
 /***/ },
-/* 18 */
+/* 20 */
 /*!****************************************!*\
   !*** ./src/constants/CartConstants.js ***!
   \****************************************/
@@ -30601,7 +30772,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 19 */
+/* 21 */
 /*!*****************************!*\
   !*** ./src/stores/index.js ***!
   \*****************************/
@@ -30615,11 +30786,11 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _ProductsStore = __webpack_require__(/*! ./ProductsStore */ 20);
+	var _ProductsStore = __webpack_require__(/*! ./ProductsStore */ 22);
 	
 	var _ProductsStore2 = _interopRequireDefault(_ProductsStore);
 	
-	var _CartStore = __webpack_require__(/*! ./CartStore */ 23);
+	var _CartStore = __webpack_require__(/*! ./CartStore */ 25);
 	
 	var _CartStore2 = _interopRequireDefault(_CartStore);
 	
@@ -30627,7 +30798,7 @@
 	exports.CartStore = _CartStore2['default'];
 
 /***/ },
-/* 20 */
+/* 22 */
 /*!*************************************!*\
   !*** ./src/stores/ProductsStore.js ***!
   \*************************************/
@@ -30649,13 +30820,13 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 	
-	var _events = __webpack_require__(/*! events */ 21);
+	var _events = __webpack_require__(/*! events */ 23);
 	
-	var _constantsProductsConstants = __webpack_require__(/*! ../constants/ProductsConstants */ 12);
+	var _constantsProductsConstants = __webpack_require__(/*! ../constants/ProductsConstants */ 14);
 	
 	var _constantsProductsConstants2 = _interopRequireDefault(_constantsProductsConstants);
 	
-	var _immutable = __webpack_require__(/*! immutable */ 22);
+	var _immutable = __webpack_require__(/*! immutable */ 24);
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
@@ -30688,6 +30859,8 @@
 						this.isLoading = true;
 						this.downloadError = false;
 						this.dataParsingError = false;
+	
+						this.emitChange();
 						break;
 	
 					case _constantsProductsConstants2['default'].SET_DATA:
@@ -30695,6 +30868,8 @@
 						this.downloadError = false;
 						this.dataParsingError = false;
 						this.collection = _immutable2['default'].fromJS(action.data);
+	
+						this.emitChange();
 						break;
 	
 					case _constantsProductsConstants2['default'].DOWNLOAD_ERR:
@@ -30702,6 +30877,8 @@
 						this.collection = null;
 						this.downloadError = true;
 						this.dataParsingError = false;
+	
+						this.emitChange();
 						break;
 	
 					case _constantsProductsConstants2['default'].DATA_PARSING_ERR:
@@ -30709,10 +30886,10 @@
 						this.collection = null;
 						this.dataParsingError = true;
 						this.downloadError = false;
+	
+						this.emitChange();
 						break;
 				}
-	
-				this.emitChange();
 			}
 		}, {
 			key: 'emitChange',
@@ -30738,7 +30915,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 21 */
+/* 23 */
 /*!********************************************************!*\
   !*** (webpack)/~/node-libs-browser/~/events/events.js ***!
   \********************************************************/
@@ -31048,7 +31225,7 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /*!***************************************!*\
   !*** ./~/immutable/dist/immutable.js ***!
   \***************************************/
@@ -35983,7 +36160,7 @@
 	}));
 
 /***/ },
-/* 23 */
+/* 25 */
 /*!*********************************!*\
   !*** ./src/stores/CartStore.js ***!
   \*********************************/
@@ -36005,13 +36182,13 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 	
-	var _events = __webpack_require__(/*! events */ 21);
+	var _events = __webpack_require__(/*! events */ 23);
 	
-	var _constantsCartConstants = __webpack_require__(/*! ../constants/CartConstants */ 18);
+	var _constantsCartConstants = __webpack_require__(/*! ../constants/CartConstants */ 20);
 	
 	var _constantsCartConstants2 = _interopRequireDefault(_constantsCartConstants);
 	
-	var _immutable = __webpack_require__(/*! immutable */ 22);
+	var _immutable = __webpack_require__(/*! immutable */ 24);
 	
 	var _immutable2 = _interopRequireDefault(_immutable);
 	
@@ -36048,15 +36225,17 @@
 						this.selectedProduct = _immutable2['default'].fromJS(action.data);
 						this.deliveries = 1;
 						this.calcTotal();
+	
+						this.emitChange();
 						break;
 	
 					case _constantsCartConstants2['default'].UPDATE_DELIVERIES:
 						this.deliveries = parseInt(action.data);
 						this.calcTotal();
+	
+						this.emitChange();
 						break;
 				}
-	
-				this.emitChange();
 			}
 		}, {
 			key: 'emitChange',
@@ -36080,6 +36259,15 @@
 	
 	exports['default'] = CartStore;
 	module.exports = exports['default'];
+
+/***/ },
+/* 26 */
+/*!*****************************!*\
+  !*** ./src/styles/app.less ***!
+  \*****************************/
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 /******/ ]);

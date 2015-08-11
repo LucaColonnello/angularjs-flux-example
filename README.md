@@ -22,12 +22,12 @@ Example of an AngularJS application using Flux Pattern
 
 ## JSON REST API
 
-JSON REST Api provided by (Mocky)[http://www.mocky.io/].
+JSON REST Api provided by [Mocky](http://www.mocky.io/).
 `http://www.mocky.io/v2/55c8c2ae66d16f900ef63bca`.
 
 
-JSON data generated with (JSON-GENERATOR)[http://www.json-generator.com/].
-```json
+JSON data generated with [JSON-GENERATOR](http://www.json-generator.com/).
+```javascript
 [
   '{{repeat(9, 9)}}',
   {
@@ -44,4 +44,3 @@ JSON data generated with (JSON-GENERATOR)[http://www.json-generator.com/].
 ]
 ```
 Rember to convert to JSON with an online converter.
-The charset has to be converted into ASCII / Unicode.

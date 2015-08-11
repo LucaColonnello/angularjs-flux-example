@@ -3,6 +3,7 @@ import angular from './vendor/angular';
 import * as Controllers from './controllers';
 import * as ActionCreators from './actions';
 import * as Stores from './stores';
+import './styles/app.less';
 
 
 const app =
