@@ -17,7 +17,7 @@ export function DownloadProducts( Dispatcher ) {
 	});
 
 	// create request
-	var r = request.get('http://www.mocky.io/v2/55c8c2ae66d16f900ef63bca');
+	var r = request.get('http://www.mocky.io/v2/55ca5d2dce3e737a14c75a7e');
 
 	// check we have to apply jsonp
 	if( typeof window !== "undefined" )

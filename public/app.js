@@ -29237,7 +29237,7 @@
 		});
 	
 		// create request
-		var r = _superagent2['default'].get('http://www.mocky.io/v2/55c8c2ae66d16f900ef63bca');
+		var r = _superagent2['default'].get('http://www.mocky.io/v2/55ca5d2dce3e737a14c75a7e');
 	
 		// check we have to apply jsonp
 		if (typeof window !== 'undefined') r.jsonp();

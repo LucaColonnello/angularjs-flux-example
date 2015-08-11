@@ -23,7 +23,11 @@ Example of an AngularJS application using Flux Pattern
 ## JSON REST API
 
 JSON REST Api provided by [Mocky](http://www.mocky.io/).
-`http://www.mocky.io/v2/55c8c2ae66d16f900ef63bca`.
+
+`http://www.mocky.io/v2/55ca5d2dce3e737a14c75a7e`.
+
+You have to set `Access-Control-Allow-Origin` to `*`.
+
 
 
 JSON data generated with [JSON-GENERATOR](http://www.json-generator.com/).
