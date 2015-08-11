@@ -1,6 +1,10 @@
 # angularjs-flux-example
 Example of an AngularJS application using Flux Pattern
 
+## Demo
+http://angularjs-flux-example.herokuapp.com/
+
+
 ## Build, Run and Test
 
 ### Build Dev
